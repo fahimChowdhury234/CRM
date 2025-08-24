@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 
 // Import components
@@ -281,49 +282,104 @@ const ChatBubble = () => {
   // Main interface with tabs
   return (
     <div className="fixed bottom-6 right-6 z-50">
-      {/* Floating Chat Bubble */}
-      {!isOpen && (
-        <div
-          onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full chat-bubble-shadow cursor-pointer flex items-center justify-center hover:shadow-3xl transition-all duration-300 btn-hover-effect"
-        >
-          <ChatBubbleLeftRightIcon className="w-8 h-8 text-white" />
-          <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center pulse-glow">
-            <span className="text-xs text-white font-bold">3</span>
-          </div>
-        </div>
-      )}
+      {/* Floating Chat Bubble - Only show when not open */}
+      <AnimatePresence mode="wait">
+        {!isOpen && (
+          <motion.div
+            initial={{ scale: 0, opacity: 0, rotate: -180 }}
+            animate={{ scale: 1, opacity: 1, rotate: 0 }}
+            exit={{ scale: 0, opacity: 0, rotate: 180 }}
+            whileHover={{
+              scale: 1.1,
+              rotate: 5,
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+            }}
+            whileTap={{ scale: 0.9, rotate: -5 }}
+            onClick={() => setIsOpen(true)}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full chat-bubble-shadow cursor-pointer flex items-center justify-center z-30"
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ChatBubbleLeftRightIcon className="w-8 h-8 text-white" />
+            </motion.div>
+            <motion.div
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center pulse-glow"
+            >
+              <span className="text-xs text-white font-bold">3</span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Expanded Chat Interface */}
-      {isOpen && (
-        <div className="w-[400px] h-[700px] bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden">
-          {/* Header */}
-          <ChatHeader activeTab={activeTab} onClose={() => setIsOpen(false)} />
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <motion.div
+            initial={{
+              scale: 0.8,
+              opacity: 0,
+              y: 50,
+              rotateX: -15,
+              transformOrigin: "bottom right",
+            }}
+            animate={{
+              scale: 1,
+              opacity: 1,
+              y: 0,
+              rotateX: 0,
+            }}
+            exit={{
+              scale: 0.8,
+              opacity: 0,
+              y: 50,
+              rotateX: -15,
+            }}
+            transition={{
+              duration: 0.6,
+              ease: [0.25, 0.46, 0.45, 0.94],
+              type: "spring",
+              stiffness: 300,
+              damping: 30,
+            }}
+            className="w-[400px] h-[700px] bg-white rounded-3xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden z-50 absolute bottom-0 right-0"
+          >
+            {/* Header */}
+            <ChatHeader
+              activeTab={activeTab}
+              onClose={() => setIsOpen(false)}
+            />
 
-          {/* Tab Content */}
-          <TabContent
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            setShowChat={setShowChat}
-            messages={messages}
-            formatTime={formatTime}
-            expandedFaq={expandedFaq}
-            toggleFaq={toggleFaq}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedBlog={selectedBlog}
-            setSelectedBlog={setSelectedBlog}
-            likedBlogs={likedBlogs}
-            handleLike={handleLike}
-            formatDate={formatDate}
-            faqs={faqs}
-            blogs={blogs}
-          />
+            {/* Tab Content */}
+            <TabContent
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              setShowChat={setShowChat}
+              messages={messages}
+              formatTime={formatTime}
+              expandedFaq={expandedFaq}
+              toggleFaq={toggleFaq}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedBlog={selectedBlog}
+              setSelectedBlog={setSelectedBlog}
+              likedBlogs={likedBlogs}
+              handleLike={handleLike}
+              formatDate={formatDate}
+              faqs={faqs}
+              blogs={blogs}
+            />
 
-          {/* Tab Navigation */}
-          <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
-      )}
+            {/* Tab Navigation */}
+            <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

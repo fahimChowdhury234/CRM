@@ -30,7 +30,35 @@ const ChatInterface = ({
   messagesEndRef,
 }) => {
   return (
-    <div className="fixed bottom-4 right-4 w-[400px] h-[700px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-50">
+    <motion.div
+      initial={{
+        scale: 0.8,
+        opacity: 0,
+        y: 50,
+        rotateX: -15,
+        transformOrigin: "bottom right",
+      }}
+      animate={{
+        scale: 1,
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+      }}
+      exit={{
+        scale: 0.8,
+        opacity: 0,
+        y: 50,
+        rotateX: -15,
+      }}
+      transition={{
+        duration: 0.6,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+      }}
+      className="fixed bottom-6 right-6 w-[400px] h-[700px] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col z-[60]"
+    >
       {/* Chat Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-2xl">
         <div className="flex items-center justify-between">
@@ -100,7 +128,7 @@ const ChatInterface = ({
         handleEmojiSelect={handleEmojiSelect}
         handleGifSelect={handleGifSelect}
       />
-    </div>
+    </motion.div>
   );
 };
 
